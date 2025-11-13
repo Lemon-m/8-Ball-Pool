@@ -1,6 +1,10 @@
 #include "game.h"
 
-Game::Game() : window(sf::VideoMode(1200, 900), "Bilard") {}
+Game::Game() : window(sf::VideoMode(1200, 900), "Bilard")
+{
+	frutiger.loadFromFile("assets/frutiger.ttf");
+	loadBallTextures();
+}
 
 void Game::run()
 {
@@ -51,6 +55,15 @@ void Game::changeState(std::unique_ptr<State> state)
 		states.pop();
 	}
 	states.push(std::move(state));
+}
+
+void Game::loadBallTextures()
+{
+	for (int i = 0; i < 16; i++)
+	{
+		std::string fileString = "assets/ball_" + std::to_string(i + 1) + ".png";
+		ballTextures[i].loadFromFile(fileString);
+	}
 }
 
 State* Game::getCurrentState()

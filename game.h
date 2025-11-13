@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <stack>
+#include <array>
 #include "state.h"
 
 class Game
@@ -18,11 +19,19 @@ class Game
 
 		void changeState(std::unique_ptr<State> state);
 
+		void loadBallTextures();
+
 		State* getCurrentState();
 
-	private:
+		std::array<sf::Texture, 16> ballTextures;
+
+		sf::Font frutiger;
 
 		sf::RenderWindow window;
+
+		sf::Mouse mouse;
+
+	private:
 
 		std::stack<std::unique_ptr<State>> states;
 };

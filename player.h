@@ -8,4 +8,6 @@ struct Player
 	int score = 0;
 	int eightBallHoleID;
 	bool eightBallHoleSet = false;
+
+	Player(int id) : ID(id) {}
 };

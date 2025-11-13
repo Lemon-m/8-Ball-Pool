@@ -4,9 +4,8 @@
 #include "globals.h"
 #include <iostream>
 
-Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, bool openTableMode)
+Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, bool openTableMode) : _p(p)
 {
-	_p = p;
 	_wallCollisionCounter = 0;
 	_cueBallCollisions = 0;
 	_scoredBallsCounter = 0;
@@ -43,9 +42,8 @@ Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& sc
 	_8BallScored = false;
 }
 
-Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes)
+Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes) : _p(p)
 {
-	_p = p;
 	_wallCollisionCounter = 0;
 	_cueBallCollisions = 0;
 	_scoredBallsCounter = 0;
