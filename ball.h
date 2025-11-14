@@ -61,7 +61,6 @@ protected:
 	float _stoppingThreshold;
 	bool _deletionReq;
 
-private:
 	unsigned static int _ballCount;
 
 };

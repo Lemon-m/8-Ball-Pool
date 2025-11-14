@@ -6,6 +6,8 @@
 #include <algorithm>
 
 
+unsigned int Ball::_ballCount = 0;
+
 Ball::Ball()
 {
 	//default

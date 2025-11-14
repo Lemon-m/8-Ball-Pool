@@ -6,6 +6,7 @@
 CueBall::CueBall(const float& radius, const sf::Vector2f& ballPosition, const sf::Texture& texture) : Ball(radius, ballPosition, texture)
 {
 	_ID = 16;
+	_ballCount--;
 
 	aimLine.setSize(sf::Vector2f(0, 0));
 	aimLine.setPosition(ballPosition);

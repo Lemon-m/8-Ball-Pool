@@ -347,7 +347,7 @@ void PlayState::render(sf::RenderWindow& window)
 			}
 		}
 	}
-	table.drawHitboxes(window);
+	//table.drawHitboxes(window);
 	for (int i = 0; i < balls.size();)
 	{
 		if (balls[i].getDeletionReq() == true)

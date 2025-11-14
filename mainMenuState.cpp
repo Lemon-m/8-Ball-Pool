@@ -1,6 +1,7 @@
 #include "mainMenuState.h"
 #include "game.h"
 #include "playState.h"
+#include "ball.h"
 #include <memory>
 #include <stack>
 
