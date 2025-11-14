@@ -225,15 +225,15 @@ sf::Vector2f Table::getPosition()
 bool Table::set8BallHoleMode(Turn& turn, Player& p1, Player& p2, const int& i, sf::RenderWindow& window, sf::Mouse mouse, sf::Event& event)
 {
 	sf::Vector2f disctanceVector;
-	disctanceVector.x  = _holes[i].getPosition().x - mouse.getPosition(window).x;
-	disctanceVector.y = _holes[i].getPosition().y - mouse.getPosition(window).y;
+	disctanceVector.x  = _holes[i].getPosition().x - window.mapPixelToCoords(mouse.getPosition(window)).x;
+	disctanceVector.y = _holes[i].getPosition().y - window.mapPixelToCoords(mouse.getPosition(window)).y;
 	float distance = sqrt(disctanceVector.x * disctanceVector.x + disctanceVector.y * disctanceVector.y);
 
 	if (distance <= _holes[i].getRadius())
 	{
 		_holes[i].setFillColor(sf::Color(0, 255, 0, 128));
 		turn.setHoveredOverHoleID(i);
-		if (event.type == sf::Event::MouseButtonPressed)
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (turn.getCurrentPlayerID() == 1)
 			{

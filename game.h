@@ -17,6 +17,12 @@ class Game
 
 		void popState();
 
+		void createWindow();
+
+		void setViewLetterbox();
+
+		void toggleFullscreen();
+
 		void changeState(std::unique_ptr<State> state);
 
 		void loadBallTextures();
@@ -29,9 +35,13 @@ class Game
 
 		sf::RenderWindow window;
 
+		sf::View view;
+
 		sf::Mouse mouse;
 
 	private:
 
 		std::stack<std::unique_ptr<State>> states;
+
+		bool isFullscreen;
 };

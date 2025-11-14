@@ -28,6 +28,8 @@ class PlayState : public State
 		Turn turn;
 		CueBall cueBall;
 		Table table;
+		sf::Texture _bgTexture;
+		sf::Sprite _bg;
 		sf::Text text;
 		bool ballsStationary = true;
 		bool gameEnded = false;

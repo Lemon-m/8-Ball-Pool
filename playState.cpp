@@ -54,6 +54,10 @@ table
 	}
 )
 {
+	_bgTexture.loadFromFile("assets/pool_bg.png");
+	_bg.setTexture(_bgTexture);
+	_bg.setScale(sf::Vector2f(0.75f, 0.75f));
+	_bg.setPosition(sf::Vector2f(0.f, 0.f));
 
 	balls.emplace_back(20, sf::Vector2f(420, 450), _game.ballTextures[0]);
 	balls.emplace_back(20, sf::Vector2f(350, 410), _game.ballTextures[1]);
@@ -331,6 +335,7 @@ void PlayState::update(float dt)
 
 void PlayState::render(sf::RenderWindow& window)
 {
+	window.draw(_bg);
 	table.drawTable(window);
 	if (turn.get8ballHoleSetMode() == true)
 	{

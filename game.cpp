@@ -1,7 +1,13 @@
 #include "game.h"
 
-Game::Game() : window(sf::VideoMode(1200, 900), "Bilard")
+Game::Game() : window(sf::VideoMode(1920, 1080), "Bilard", sf::Style::Fullscreen), view(sf::FloatRect(0, 0, 1200.f, 900.f))
 {
+	isFullscreen = true;
+
+	setViewLetterbox();
+
+	window.setView(view);
+
 	frutiger.loadFromFile("assets/frutiger.ttf");
 	loadBallTextures();
 }
@@ -23,6 +29,12 @@ void Game::run()
 				{
 					window.close();
 				}
+
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
+				{
+					toggleFullscreen();
+				}
+
 				states.top()->handleEvent(event);
 			}
 
@@ -46,6 +58,49 @@ void Game::popState()
 	{
 		states.pop();
 	}
+}
+
+void Game::createWindow()
+{
+	window.close();
+
+	if (isFullscreen)
+	{
+		window.create(sf::VideoMode::getDesktopMode(), "Bilard", sf::Style::Fullscreen);
+	}
+	else
+	{
+		window.create(sf::VideoMode(1200, 900), "Bilard", sf::Style::Titlebar | sf::Style::Close);
+	}
+
+	view = sf::View(sf::FloatRect(0, 0, 1200.f, 900.f));
+	setViewLetterbox();
+	window.setView(view);
+}
+
+void Game::setViewLetterbox()
+{
+	float windowRatio = float(window.getSize().x) / window.getSize().y;
+	float viewRatio = 1200.f / 900.f;
+	float sizeX = 1.f;
+	float sizeY = 1.f;
+
+	if (windowRatio > viewRatio)
+	{
+		sizeX = viewRatio / windowRatio;
+	}
+	else
+	{
+		sizeY = windowRatio / viewRatio;
+	}
+
+	view.setViewport(sf::FloatRect((1.f - sizeX) / 2.f, (1.f - sizeY) / 2.f, sizeX, sizeY));
+}
+
+void Game::toggleFullscreen()
+{
+	isFullscreen = !isFullscreen;
+	createWindow();
 }
 
 void Game::changeState(std::unique_ptr<State> state)

@@ -22,8 +22,8 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 {
 	_aiming = true;
 
-	_rotation = (std::atan2(sf::Mouse::getPosition(window).x - _ballPosition.x, sf::Mouse::getPosition(window).y - _ballPosition.y) * 180) / pi;
-	_mouseDistance = sqrt(pow((_ballPosition.x) - sf::Mouse::getPosition(window).x, 2) + pow((_ballPosition.y) - sf::Mouse::getPosition(window).y, 2));
+	_rotation = (std::atan2(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - _ballPosition.x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - _ballPosition.y) * 180) / pi;
+	_mouseDistance = sqrt(pow((_ballPosition.x) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, 2) + pow((_ballPosition.y) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).y, 2));
 
 	aimLine.setPosition(_ballPosition);
 	aimLine.setSize(sf::Vector2f(3, _mouseDistance));
@@ -55,11 +55,11 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 
 void CueBall::ballInHandMode(sf::RenderWindow& window, sf::Mouse mouse, Table& table, sf::Event& event)
 {
-	float x = std::clamp(mouse.getPosition(window).x, static_cast<int>(table.getPosition().x + 65 + ball.getRadius()), static_cast<int>(table.getPosition().x + tableX - 65 - ball.getRadius()));
-	float y = std::clamp(mouse.getPosition(window).y, static_cast<int>(table.getPosition().y + 64 + ball.getRadius()), static_cast<int>(table.getPosition().y + tableY - 64 - ball.getRadius()));
+	float x = std::clamp(static_cast<int>(window.mapPixelToCoords(mouse.getPosition(window)).x), static_cast<int>(table.getPosition().x + 65 + ball.getRadius()), static_cast<int>(table.getPosition().x + tableX - 65 - ball.getRadius()));
+	float y = std::clamp(static_cast<int>(window.mapPixelToCoords(mouse.getPosition(window)).y), static_cast<int>(table.getPosition().y + 64 + ball.getRadius()), static_cast<int>(table.getPosition().y + tableY - 64 - ball.getRadius()));
 	_ballPosition = sf::Vector2f(x, y);
 
-	if (event.type == sf::Event::MouseButtonPressed)
+	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
 		_ballInHand = false;
 	}
