@@ -1,4 +1,5 @@
 #include "textLabel.h"
+#include "popUp.h"
 
 TextLabel::TextLabel(sf::Font& font, const int& fontSize, sf::Color color, sf::Color hColor, sf::Vector2f position, const std::string& textString) : TextLabel(font, fontSize, color, position, textString)
 {

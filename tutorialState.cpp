@@ -1,4 +1,5 @@
 ﻿#include "tutorialState.h"
+#include "mainMenuState.h"
 
 TutorialState::TutorialState(Game& game) : State(game),
 _leftButton(_game.frutiger, 96, sf::Color::White, sf::Color(102, 102, 102), sf::Vector2f(115.f, 450.f), "<"),
@@ -13,6 +14,11 @@ _currentSlideText3(_game.frutiger, 48, sf::Color::White, sf::Vector2f(640.f, 72.
 	_bg.setTexture(_bgTexture);
 	_bg.setScale(sf::Vector2f(0.75f, 0.75f));
 	_bg.setPosition(sf::Vector2f(0.f, 0.f));
+
+	_backTexture.loadFromFile("assets/backIcon.png");
+	_backBtn.setTexture(_backTexture);
+	_backBtn.setScale(0.375f, 0.375f);
+	_backBtn.setPosition(15.f, 15.f);
 
 	for (int i = 0; i < sizeof(_tutorialSlidesTextures) / sizeof(_tutorialSlidesTextures[0]); i++)
 	{
@@ -33,6 +39,9 @@ _currentSlideText3(_game.frutiger, 48, sf::Color::White, sf::Vector2f(640.f, 72.
 
 void TutorialState::handleEvent(sf::Event& event)
 {
+	float mouseX = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).x;
+	float mouseY = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).y;
+
 	if (_leftButton.isMouseOver(_game.window))
 	{
 		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
@@ -48,6 +57,14 @@ void TutorialState::handleEvent(sf::Event& event)
 			rightButtonPressed();
 		}
 	}
+
+	if (_backBtn.getGlobalBounds().contains(mouseX, mouseY))
+	{
+		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+		{
+			_game.changeState(std::make_unique<MainMenuState>(_game));
+		}
+	}
 }
 
 void TutorialState::update(float dt)
@@ -57,6 +74,7 @@ void TutorialState::update(float dt)
 void TutorialState::render(sf::RenderWindow& window)
 {
 	window.draw(_bg);
+	window.draw(_backBtn);
 	window.draw(_tutorialSlides[_currentSlide]);
 	_leftButton.draw(window);
 	_rightButton.draw(window);

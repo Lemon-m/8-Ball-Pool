@@ -39,6 +39,11 @@ Ball::Ball(const float& radius, const sf::Vector2f& ballPosition, const sf::Text
 	ball.setTexture(_bTexture);
 }
 
+void Ball::resetBallCount()
+{
+	_ballCount = 0;
+}
+
 void Ball::drawBall(sf::RenderWindow& window)
 {
 	ball.setPosition(_ballPosition);
@@ -207,7 +212,7 @@ void Ball::handleBallCollision(Ball& cBall)
 	}
 }
 
-void Ball::handleHoleCollision(Table& table, const int& i, Turn& turn, Player& p1, Player& p2, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, int& win)
+void Ball::handleHoleCollision(Table& table, const int& i, Turn& turn, Player& p1, Player& p2, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, std::vector<sf::Sprite>& scoredSolidsUI, std::vector<sf::Sprite>& scoredStripesUI, sf::Vector2f& p1FirstUIBallPos, sf::Vector2f& p2FirstUIBallPos, int& win)
 {
 	_velocity = sf::Vector2f(0, 0);
 	_deletionReq = true;
@@ -255,5 +260,56 @@ void Ball::handleHoleCollision(Table& table, const int& i, Turn& turn, Player& p
 	else
 	{
 		turn.ballScored(*this, p1, p2, scoredSolids, scoredStripes);
+
+		if (solids.count(_ID))
+		{
+			if (p1.ballType == 1 && p2.ballType == 2)
+			{
+				scoredSolidsUI.push_back(sf::Sprite());
+
+				int ballOffsetFactor = scoredSolidsUI.size() - 1;
+
+				scoredSolidsUI.back().setTexture(*_bTexture);
+				scoredSolidsUI.back().setScale(0.25f, 0.25f);
+				scoredSolidsUI.back().setOrigin(sf::Vector2f(17.5f, 17.5f));
+				scoredSolidsUI.back().setPosition(p1FirstUIBallPos.x + (17.5f * ballOffsetFactor), p1FirstUIBallPos.y);
+			}
+			else if (p1.ballType == 2 && p2.ballType == 1)
+			{
+				scoredSolidsUI.push_back(sf::Sprite());
+
+				int ballOffsetFactor = scoredSolidsUI.size() - 1;
+
+				scoredSolidsUI.back().setTexture(*_bTexture);
+				scoredSolidsUI.back().setScale(0.25f, 0.25f);
+				scoredSolidsUI.back().setOrigin(sf::Vector2f(17.5f, 17.5f));
+				scoredSolidsUI.back().setPosition(p2FirstUIBallPos.x - (17.5f * ballOffsetFactor), p2FirstUIBallPos.y);
+			}
+		}
+		else if (stripes.count(_ID))
+		{
+			if (p1.ballType == 2 && p2.ballType == 1)
+			{
+				scoredStripesUI.push_back(sf::Sprite());
+
+				int ballOffsetFactor = scoredStripesUI.size() - 1;
+
+				scoredStripesUI.back().setTexture(*_bTexture);
+				scoredStripesUI.back().setScale(0.25f, 0.25f);
+				scoredStripesUI.back().setOrigin(sf::Vector2f(17.5f, 17.5f));
+				scoredStripesUI.back().setPosition(p1FirstUIBallPos.x + (17.5f * ballOffsetFactor), p1FirstUIBallPos.y);
+			}
+			else if (p1.ballType == 1 && p2.ballType == 2)
+			{
+				scoredStripesUI.push_back(sf::Sprite());
+
+				int ballOffsetFactor = scoredStripesUI.size() - 1;
+
+				scoredStripesUI.back().setTexture(*_bTexture);
+				scoredStripesUI.back().setScale(0.25f, 0.25f);
+				scoredStripesUI.back().setOrigin(sf::Vector2f(17.5f, 17.5f));
+				scoredStripesUI.back().setPosition(p2FirstUIBallPos.x - (17.5f * ballOffsetFactor), p2FirstUIBallPos.y);
+			}
+		}
 	}
 }

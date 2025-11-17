@@ -14,6 +14,8 @@ public:
 
 	Ball(const float& radius, const sf::Vector2f& ballPosition, const sf::Texture& texture);
 
+	static void resetBallCount();
+
 	virtual void drawBall(sf::RenderWindow& window);
 
 	sf::Vector2f getVelocity();
@@ -44,7 +46,7 @@ public:
 
 	void handleBallCollision(Ball& cBall);
 
-	void handleHoleCollision(Table& table, const int& i, Turn& turn, Player& p1, Player& p, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, int& win);
+	void handleHoleCollision(Table& table, const int& i, Turn& turn, Player& p1, Player& p2, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes, std::vector<sf::Sprite>& scoredSolidsUI, std::vector<sf::Sprite>& scoredStripesUI, sf::Vector2f& p1FirstUIBallPos, sf::Vector2f& p2FirstUIBallPos, int& win);
 
 	sf::CircleShape ball;
 

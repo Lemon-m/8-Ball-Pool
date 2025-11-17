@@ -1,4 +1,5 @@
 #include "playState.h"
+#include "mainMenuState.h"
 #include <iostream>
 
 PlayState::PlayState(Game& game) : State(game), 
@@ -6,6 +7,18 @@ p1(1),
 p2(2),
 scoredSolids(),
 scoredStripes(),
+turnText(_game.frutiger, 72, sf::Color::White,  sf::Vector2f(600.f, 65.f), "Player 1's turn"),
+preShotText(_game.frutiger, 28, sf::Color::White, sf::Vector2f(600.f, 125.f), ""),
+player1Text(_game.frutiger, 42, sf::Color::White, sf::Vector2f(180.f, 760.f), "Player 1"),
+player1Type(_game.frutiger, 28, sf::Color::White, sf::Vector2f(180.f, 800.f), ""),
+player2Text(_game.frutiger, 42, sf::Color::White, sf::Vector2f(1005.f, 760.f), "Player 2"),
+player2Type(_game.frutiger, 28, sf::Color::White, sf::Vector2f(1005.f, 800.f), ""),
+backPopUpYes(_game.frutiger, 56, sf::Color(31, 224, 69), sf::Color(85, 219, 117), sf::Vector2f(470.f, 555.f), "Yes"),
+backPopUpNo(_game.frutiger, 56, sf::Color(255, 42, 74), sf::Color(255, 71, 101), sf::Vector2f(730.f, 555.f), "No"),
+backPopUp(_game.frutiger, "Are you sure you want to return\n           to the main menu?\n    (current game will be reset)", 38),
+winPopUp(_game.frutiger, "placeholder", 42),
+winPopUpReset(_game.frutiger, 56, sf::Color(28, 101, 255), sf::Color(98, 148, 255), sf::Vector2f(600.f, 555.f), "Reset"),
+resetBtn(_game.frutiger, 42, sf::Color(80, 133, 255), sf::Color(117, 160, 255), sf::Vector2f(600.f, 860.f), "Reset"),
 turn(p1, scoredSolids, scoredStripes, true), 
 cueBall(20, sf::Vector2f(840, 450), _game.ballTextures[15]),
 table
@@ -54,10 +67,25 @@ table
 	}
 )
 {
-	_bgTexture.loadFromFile("assets/pool_bg.png");
-	_bg.setTexture(_bgTexture);
-	_bg.setScale(sf::Vector2f(0.75f, 0.75f));
-	_bg.setPosition(sf::Vector2f(0.f, 0.f));
+	Ball::resetBallCount();
+
+	gameEnded = false;
+	ballsStationary = true;
+	backPopUpActive = false;
+	winPopUpActive = false;
+
+	bgTexture.loadFromFile("assets/pool_bg.png");
+	bg.setTexture(bgTexture);
+	bg.setScale(sf::Vector2f(0.75f, 0.75f));
+	bg.setPosition(sf::Vector2f(0.f, 0.f));
+
+	backTexture.loadFromFile("assets/backIcon.png");
+	backBtn.setTexture(backTexture);
+	backBtn.setScale(0.375f, 0.375f);
+	backBtn.setPosition(15.f, 15.f);
+
+	p1FirstUIBallPos = sf::Vector2f(120.f, 835.f);
+	p2FirstUIBallPos = sf::Vector2f(1045.f, 835.f);
 
 	balls.emplace_back(20, sf::Vector2f(420, 450), _game.ballTextures[0]);
 	balls.emplace_back(20, sf::Vector2f(350, 410), _game.ballTextures[1]);
@@ -74,50 +102,119 @@ table
 	balls.emplace_back(20, sf::Vector2f(280, 450), _game.ballTextures[12]);
 	balls.emplace_back(20, sf::Vector2f(315, 470), _game.ballTextures[13]);
 	balls.emplace_back(20, sf::Vector2f(280, 410), _game.ballTextures[14]);
-
-	text.setFont(_game.frutiger);
-	text.setCharacterSize(72);
 }
 
 void PlayState::handleEvent(sf::Event& event)
 {
-	if (ballsStationary == true && win == 0)
+	if (backPopUpActive == false && winPopUpActive == false)
 	{
-		if (turn.get8ballHoleSetMode() == true)
+		float mouseX = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).x;
+		float mouseY = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).y;
+
+		if (backBtn.getGlobalBounds().contains(mouseX, mouseY))
 		{
-			for (int i = 0; i < table.getHolesSize(); i++)
+			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 			{
-				if (table.set8BallHoleMode(turn, p1, p2, i, _game.window, _game.mouse, event) == true)
-				{
-					break;
-				}
+				backPopUpActive = true;
 			}
 		}
-		else if (cueBall.getBallInHand() == true)
+	}
+
+	if (backPopUpActive == false && winPopUpActive == false)
+	{
+		if (resetBtn.isMouseOver(_game.window) == true && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 		{
-			cueBall.ballInHandMode(_game.window, _game.mouse, table, event, turn.getOpenTableMode());
-			for (int i = 0; i < balls.size(); i++)
+			_game.changeState(std::make_unique<PlayState>(_game));
+			return;
+		}
+
+		if (ballsStationary == true && win == 0)
+		{
+			if (turn.get8ballHoleSetMode() == true)
 			{
-				if (cueBall.checkBallCollision(balls[i]))
+				for (int i = 0; i < table.getHolesSize(); i++)
 				{
-					cueBall.setBallInHand(true);
+					if (table.set8BallHoleMode(turn, p1, p2, i, _game.window, _game.mouse, event) == true)
+					{
+						break;
+					}
 				}
 			}
+			else if (cueBall.getBallInHand() == true)
+			{
+				cueBall.ballInHandMode(_game.window, _game.mouse, table, event, turn.getOpenTableMode());
+				for (int i = 0; i < balls.size(); i++)
+				{
+					if (cueBall.checkBallCollision(balls[i]))
+					{
+						cueBall.setBallInHand(true);
+					}
+				}
+			}
+			else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Space) || cueBall.getAiming() == true)
+			{
+				cueBall.aim(_game.window, event, turn);
+			}
 		}
-		else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Space) || cueBall.getAiming() == true)
+	}
+	else if (backPopUpActive == true)
+	{
+		if (backPopUp.closeBtn.isMouseOver(_game.window) == true || backPopUpNo.isMouseOver(_game.window) == true)
 		{
-			cueBall.aim(_game.window, event, turn);
+			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+			{
+				backPopUp.closeBtn.text.setFillColor(backPopUp.closeBtn.normalColor);
+				backPopUpNo.text.setFillColor(backPopUp.closeBtn.normalColor);
+				backPopUpActive = false;
+			}
+		}
+		else if (backPopUpYes.isMouseOver(_game.window) == true && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+		{
+			_game.changeState(std::make_unique<MainMenuState>(_game));
+			return;
+		}
+	}
+	else if (winPopUpActive == true)
+	{
+		if (winPopUp.closeBtn.isMouseOver(_game.window) == true)
+		{
+			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+			{
+				winPopUp.closeBtn.text.setFillColor(winPopUp.closeBtn.normalColor);
+				winPopUpActive = false;
+			}
+		}
+		else if (winPopUpReset.isMouseOver(_game.window) == true && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+		{
+			_game.changeState(std::make_unique<PlayState>(_game));
+			return;
 		}
 	}
 }
 
 void PlayState::update(float dt)
 {
-	std::string currentTeamNumber = std::to_string(turn.getCurrentPlayerID());
-	text.setString(currentTeamNumber);
-	sf::Vector2f textCenter(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-	text.setOrigin(textCenter);
-	text.setPosition(sf::Vector2f(600.f, 125.f));
+	if (win == 0)
+	{
+		turnText.changeText("Player " + std::to_string(turn.getCurrentPlayerID()) + "'s turn");
+	}
+	else
+	{
+		turnText.changeText("Player " + std::to_string(win) + " won!");
+	}
+
+	if (turn.get8ballHoleSetMode() == true)
+	{
+		preShotText.changeText("(select your final pocket for the 8-ball)");
+	}
+	else if (cueBall.getBallInHand() == true)
+	{
+		preShotText.changeText("(ball in hand)");
+	}
+	else
+	{
+		preShotText.changeText("");
+	}
 
 	for (int i = 0; i < balls.size(); i++)
 	{
@@ -137,7 +234,7 @@ void PlayState::update(float dt)
 			if (balls[i].checkHoleCollision(table, j))
 			{
 				std::cout << "kolizja z ³uz¹\n";
-				balls[i].handleHoleCollision(table, j, turn, p1, p2, scoredSolids, scoredStripes, win);
+				balls[i].handleHoleCollision(table, j, turn, p1, p2, scoredSolids, scoredStripes, scoredSolidsUI, scoredStripesUI, p1FirstUIBallPos, p2FirstUIBallPos, win);
 			}
 		}
 
@@ -247,6 +344,9 @@ void PlayState::update(float dt)
 	if (win != 0 && gameEnded == false)
 	{
 		std::cout << "Koniec gry! Wygra³ gracz nr. " << win << "\n";
+		backPopUpActive = false;
+		winPopUp.message.changeText("       Player " + std::to_string(win) + " Wins!\nDo you want to reset?");
+		winPopUpActive = true;
 		gameEnded = true;
 	}
 	else if (ballsStationary == true && turn.getCueBallShot() == true && gameEnded == false)
@@ -259,6 +359,92 @@ void PlayState::update(float dt)
 		if (((turn.getScoredSolidsCounter() != 0 && turn.getScoredStripesCounter() == 0) || (turn.getScoredStripesCounter() != 0 && turn.getScoredSolidsCounter() == 0)) && turn.getOpenTableMode() == true)
 		{
 			turn.setTeams(p1, p2, scoredSolids, scoredStripes, cueBall);
+
+			if (p1.ballType == 1 && p2.ballType == 2)
+			{
+				player1Type.changeText("(Solids)");
+
+				if (!scoredSolids.empty())
+				{
+					scoredSolidsUI.push_back(sf::Sprite());
+					scoredSolidsUI[0].setTexture(_game.ballTextures[scoredSolids[0] - 1]);
+					scoredSolidsUI[0].setScale(0.25f, 0.25f);
+					scoredSolidsUI[0].setOrigin(sf::Vector2f(17.5f, 17.5f));
+					scoredSolidsUI[0].setPosition(p1FirstUIBallPos);
+
+					for (int i = 1; i < scoredSolids.size(); i++)
+					{
+						scoredSolidsUI.push_back(sf::Sprite());
+						scoredSolidsUI[i].setTexture(_game.ballTextures[scoredSolids[i] - 1]);
+						scoredSolidsUI[i].setScale(0.25f, 0.25f);
+						scoredSolidsUI[i].setOrigin(sf::Vector2f(17.5f, 17.5f));
+						scoredSolidsUI[i].setPosition(p1FirstUIBallPos.x + (i * 17.5f), p1FirstUIBallPos.y);
+					}
+				}
+
+				player2Type.changeText("(Stripes)");
+
+				if (!scoredStripes.empty())
+				{
+					scoredStripesUI.push_back(sf::Sprite());
+					scoredStripesUI[0].setTexture(_game.ballTextures[scoredStripes[0] - 1]);
+					scoredStripesUI[0].setScale(0.25f, 0.25f);
+					scoredStripesUI[0].setOrigin(sf::Vector2f(17.5f, 17.5f));
+					scoredStripesUI[0].setPosition(p2FirstUIBallPos);
+
+					for (int i = 1; i < scoredStripes.size(); i++)
+					{
+						scoredStripesUI.push_back(sf::Sprite());
+						scoredStripesUI[i].setTexture(_game.ballTextures[scoredStripes[i] - 1]);
+						scoredStripesUI[i].setScale(0.25f, 0.25f);
+						scoredStripesUI[i].setOrigin(sf::Vector2f(17.5f, 17.5f));
+						scoredStripesUI[i].setPosition(p2FirstUIBallPos.x - (i * 17.5f), p2FirstUIBallPos.y);
+					}
+				}
+			}
+			else if (p1.ballType == 2 && p2.ballType == 1)
+			{
+				player1Type.changeText("(Stripes)");
+
+				if (!scoredStripes.empty())
+				{
+					scoredStripesUI.push_back(sf::Sprite());
+					scoredStripesUI[0].setTexture(_game.ballTextures[scoredStripes[0] - 1]);
+					scoredStripesUI[0].setScale(0.25f, 0.25f);
+					scoredStripesUI[0].setOrigin(sf::Vector2f(17.5f, 17.5f));
+					scoredStripesUI[0].setPosition(p1FirstUIBallPos);
+
+					for (int i = 1; i < scoredStripes.size(); i++)
+					{
+						scoredStripesUI.push_back(sf::Sprite());
+						scoredStripesUI[i].setTexture(_game.ballTextures[scoredStripes[i] - 1]);
+						scoredStripesUI[i].setScale(0.25f, 0.25f);
+						scoredStripesUI[i].setOrigin(sf::Vector2f(17.5f, 17.5f));
+						scoredStripesUI[i].setPosition(p1FirstUIBallPos.x + (i * 17.5f), p1FirstUIBallPos.y);
+					}
+				}
+
+				player2Type.changeText("(Solids)");
+
+				if (!scoredSolids.empty())
+				{
+					scoredSolidsUI.push_back(sf::Sprite());
+					scoredSolidsUI[0].setTexture(_game.ballTextures[scoredSolids[0] - 1]);
+					scoredSolidsUI[0].setScale(0.25f, 0.25f);
+					scoredSolidsUI[0].setOrigin(sf::Vector2f(17.5f, 17.5f));
+					scoredSolidsUI[0].setPosition(p2FirstUIBallPos);
+
+					for (int i = 1; i < scoredSolids.size(); i++)
+					{
+						scoredSolidsUI.push_back(sf::Sprite());
+						scoredSolidsUI[i].setTexture(_game.ballTextures[scoredSolids[i] - 1]);
+						scoredSolidsUI[i].setScale(0.25f, 0.25f);
+						scoredSolidsUI[i].setOrigin(sf::Vector2f(17.5f, 17.5f));
+						scoredSolidsUI[i].setPosition(p2FirstUIBallPos.x - (i * 17.5f), p2FirstUIBallPos.y);
+					}
+				}
+
+			}
 		}
 
 		if (turn.getCueBallShot() == true)
@@ -335,7 +521,8 @@ void PlayState::update(float dt)
 
 void PlayState::render(sf::RenderWindow& window)
 {
-	window.draw(_bg);
+	window.draw(bg);
+	window.draw(backBtn);
 	table.drawTable(window);
 	if (turn.get8ballHoleSetMode() == true)
 	{
@@ -361,5 +548,36 @@ void PlayState::render(sf::RenderWindow& window)
 		}
 	}
 	cueBall.drawBall(window);
-	window.draw(text);
+	turnText.draw(window);
+	preShotText.draw(window);
+	player1Text.draw(window);
+	player1Type.draw(window);
+	player2Text.draw(window);
+	player2Type.draw(window);
+	if (p1.ballType != 0 && p2.ballType != 0)
+	{
+		for (int i = 0; i < scoredSolidsUI.size(); i++)
+		{
+			window.draw(scoredSolidsUI[i]);
+		}
+		for (int i = 0; i < scoredStripesUI.size(); i++)
+		{
+			window.draw(scoredStripesUI[i]);
+		}
+	}
+	if (win != 0)
+	{
+		resetBtn.draw(window);
+	}
+	if (backPopUpActive == true)
+	{
+		backPopUp.draw(window);
+		backPopUpYes.draw(window);
+		backPopUpNo.draw(window);
+	}
+	else if(winPopUpActive)
+	{
+		winPopUp.draw(window);
+		winPopUpReset.draw(window);
+	}
 }

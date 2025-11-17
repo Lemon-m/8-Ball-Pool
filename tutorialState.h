@@ -24,6 +24,8 @@ protected:
 
 	sf::Texture _bgTexture;
 	sf::Sprite _bg;
+	sf::Texture _backTexture;
+	sf::Sprite _backBtn;
 	std::array<sf::Texture, 24> _tutorialSlidesTextures;
 	std::array<sf::Sprite, 24> _tutorialSlides;
 	TextLabel _currentSlideText1;

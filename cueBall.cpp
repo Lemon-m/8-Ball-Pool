@@ -43,7 +43,7 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 
 	_force *= 5;
 
-	if (event.type == sf::Event::MouseButtonPressed)
+	if (event.type == sf::Event::MouseButtonReleased)
 	{
 		Shoot();
 		turn.cueBallShot();
@@ -68,7 +68,7 @@ void CueBall::ballInHandMode(sf::RenderWindow& window, sf::Mouse mouse, Table& t
 	float y = std::clamp(static_cast<int>(window.mapPixelToCoords(mouse.getPosition(window)).y), static_cast<int>(table.getPosition().y + 64 + ball.getRadius()), static_cast<int>(table.getPosition().y + tableY - 64 - ball.getRadius()));
 	_ballPosition = sf::Vector2f(x, y);
 
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
 		_ballInHand = false;
 	}
