@@ -20,7 +20,7 @@ Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& sc
 	{
 		_lastBall = true;
 		_8ballHoleSetMode = true;
-		std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
+		//std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
 
 	}
 	else if ((_p.ballType == 1 && scoredSolids.size() == 7) || (_p.ballType == 2 && scoredStripes.size() == 7))
@@ -29,7 +29,7 @@ Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& sc
 		if (_p.eightBallHoleSet == false)
 		{
 			_8ballHoleSetMode = true;
-			std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
+			//std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
 		}
 		else
 		{
@@ -62,7 +62,7 @@ Turn::Turn(const Player& p, std::vector<int>& scoredSolids, std::vector<int>& sc
 		if (_p.eightBallHoleSet == false)
 		{
 			_8ballHoleSetMode = true;
-			std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
+			//std::cout << "Gracz nr. " << _p.ID << "wybiera ³uzê, do której wbije ósemkê.\n";
 		}
 		else
 		{
@@ -179,7 +179,7 @@ void Turn::setTeams(Player& p1, Player& p2, std::vector<int>& scoredSolids, std:
 		_switchReq = false;
 	}
 
-	std::cout << "Ustalono dru¿yny!\nTyp bili gracza 1 - " << p1.ballType << "\nTyp bili gracza 2 - " << p2.ballType << "\nLicznik wbiytch bili w turze przez aktualnego gracza - " << _scoredBallsCounter << "\nUstalono z faulem? - " << cueBall.getBallInHandRequest() << "\nZmiana tur? - " << _switchReq << "\n";
+	//std::cout << "Ustalono dru¿yny!\nTyp bili gracza 1 - " << p1.ballType << "\nTyp bili gracza 2 - " << p2.ballType << "\nLicznik wbiytch bili w turze przez aktualnego gracza - " << _scoredBallsCounter << "\nUstalono z faulem? - " << cueBall.getBallInHandRequest() << "\nZmiana tur? - " << _switchReq << "\n";
 }
 
 void Turn::ballScored(Ball& ball, Player& p1, Player& p2, std::vector<int>& scoredSolids, std::vector<int>& scoredStripes)

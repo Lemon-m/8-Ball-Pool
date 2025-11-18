@@ -254,7 +254,7 @@ void PlayState::update(float dt)
 		{
 			if (balls[i].checkHoleCollision(table, j))
 			{
-				std::cout << "kolizja z ³uz¹\n";
+				//std::cout << "kolizja z ³uz¹\n";
 				balls[i].handleHoleCollision(table, j, turn, p1, p2, scoredSolids, scoredStripes, scoredSolidsUI, scoredStripesUI, p1FirstUIBallPos, p2FirstUIBallPos, win);
 			}
 		}
@@ -295,7 +295,7 @@ void PlayState::update(float dt)
 		{
 			if (cueBall.checkHoleCollision(table, i))
 			{
-				std::cout << "kolizja z ³uz¹\n";
+				//std::cout << "kolizja z ³uz¹\n";
 				if (turn.get8BallScored() == false)
 				{
 					cueBall.handleHoleCollision(table, i, turn);
@@ -364,7 +364,7 @@ void PlayState::update(float dt)
 
 	if (win != 0 && gameEnded == false)
 	{
-		std::cout << "Koniec gry! Wygra³ gracz nr. " << win << "\n";
+		//std::cout << "Koniec gry! Wygra³ gracz nr. " << win << "\n";
 		backPopUpActive = false;
 		winPopUp.message.changeText("       Player " + std::to_string(win) + " Wins!\nDo you want to reset?");
 		winPopUpActive = true;

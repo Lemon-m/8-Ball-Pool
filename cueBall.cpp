@@ -8,8 +8,21 @@ CueBall::CueBall(const float& radius, const sf::Vector2f& ballPosition, const sf
 	_ID = 16;
 	_ballCount--;
 
-	aimLine.setSize(sf::Vector2f(0, 0));
-	aimLine.setPosition(ballPosition);
+	cueStickTexture.loadFromFile("assets/cue.png");
+
+	cueStick.setTexture(cueStickTexture);
+	cueStick.setOrigin(0.f, 15.f);
+	cueStick.setPosition(ballPosition);
+
+	hitForceBar.setFillColor(sf::Color::Red);
+	hitForceBar.setSize(sf::Vector2f(198.f, 5.f));
+	hitForceBar.setOrigin(-121.f, 15.f);
+	hitForceBar.setPosition(ballPosition);
+
+	hitForce.setFillColor(sf::Color::Green);
+	hitForce.setSize(sf::Vector2f(0.f, 5.f));
+	hitForce.setOrigin(-121.f, 15.f);
+	hitForce.setPosition(ballPosition);
 
 	_ballInHand = false;
 	_ballInHandRequest = false;
@@ -26,21 +39,25 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 	_rotation = (std::atan2(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - _ballPosition.x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - _ballPosition.y) * 180) / pi;
 	_mouseDistance = sqrt(pow((_ballPosition.x) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, 2) + pow((_ballPosition.y) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).y, 2));
 
-	aimLine.setPosition(_ballPosition);
-	aimLine.setSize(sf::Vector2f(3, _mouseDistance));
-	aimLine.setRotation(-_rotation);
+	//aimLine.setPosition(_ballPosition);
+	//aimLine.setSize(sf::Vector2f(3, _mouseDistance));
+	//aimLine.setRotation(-_rotation);
 
-	_force = _mouseDistance - 40;
+	cueStick.setPosition(_ballPosition);
+	cueStick.setRotation(-_rotation + 90);
 
-	if (_force > 150)
-	{
-		_force = 150;
-	}
-	else if (_force < 15)
-	{
-		_force = 15;
-	}
+	hitForceBar.setPosition(_ballPosition);
+	hitForceBar.setRotation(-_rotation + 90);
 
+	hitForce.setPosition(_ballPosition);
+
+	float hitForceLength = (std::clamp(_mouseDistance, 55, 190) * 1.465) - 80;
+
+	hitForce.setSize(sf::Vector2f(hitForceLength, 5.f));
+	hitForce.setRotation(-_rotation + 90);
+
+	_force = _mouseDistance - 40; // force = 75 (max mouseDistance = 55) | force = 150 (min mouseDistance = 190)
+	_force = std::clamp(_force, 15, 150);
 	_force *= 5;
 
 	if (event.type == sf::Event::MouseButtonReleased)
@@ -80,7 +97,7 @@ void CueBall::Shoot()
 	_rotationInRadians = (_rotation * (pi / 180)) - 1.57079633; // 1.57079633 rad = 90 degrees
 	_velocity.x = -(_force * cos(_rotationInRadians));
 	_velocity.y = _force * sin(_rotationInRadians);
-	aimLine.setSize(sf::Vector2f(0, 0));
+	hitForce.setSize(sf::Vector2f(0.f, 5.f));
 
 	//std::cout << "Hit\n";
 	//std::cout << "rotation in radians: " << _rotationInRadians << "\n";
@@ -119,7 +136,13 @@ void CueBall::setBallInHandRequest(bool ballInHandRequest)
 void CueBall::drawBall(sf::RenderWindow& window)
 {
 	ball.setPosition(_ballPosition);
-	window.draw(aimLine);
+	if (_aiming == true)
+	{
+		window.draw(cueStick);
+		window.draw(hitForceBar);
+		window.draw(hitForce);
+	}
+	//window.draw(aimLine);
 	window.draw(ball);
 
 }
@@ -129,6 +152,6 @@ void CueBall::handleHoleCollision(Table& table, const int& i, Turn& turn)
 	_ballInHandRequest = true;
 	turn.setSwitchRequest(true);
 	_velocity = sf::Vector2f(0.f, 0.f);
-	aimLine.setSize(sf::Vector2f(0, 0));
+	hitForce.setSize(sf::Vector2f(0.f, 5.f));
 	setBallPosition(sf::Vector2f(1220, 920));
 }

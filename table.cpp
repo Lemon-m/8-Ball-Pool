@@ -238,7 +238,7 @@ bool Table::set8BallHoleMode(Turn& turn, Player& p1, Player& p2, const int& i, T
 		{
 			if (turn.getCurrentPlayerID() == 1)
 			{
-				std::cout << "Gracz nr. 1 musi trafiæ ósemk¹ do ³uzy " << i << "\n";
+				//std::cout << "Gracz nr. 1 musi trafiæ ósemk¹ do ³uzy " << i << "\n";
 				p1.eightBallHoleID = i;
 				p1.eightBallHoleSet = true;
 				turn.set8BallHoleSetMode(false);
@@ -268,7 +268,7 @@ bool Table::set8BallHoleMode(Turn& turn, Player& p1, Player& p2, const int& i, T
 			}
 			else if (turn.getCurrentPlayerID() == 2)
 			{
-				std::cout << "Gracz nr. 2 musi trafiæ ósemk¹ do ³uzy " << i << "\n";
+				//std::cout << "Gracz nr. 2 musi trafiæ ósemk¹ do ³uzy " << i << "\n";
 				p2.eightBallHoleID = i;
 				p2.eightBallHoleSet = true;
 				turn.set8BallHoleSetMode(false);

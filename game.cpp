@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "Bilard", sf::Style::Fullscreen), view(sf::FloatRect(0, 0, 1200.f, 900.f))
+Game::Game() : window(sf::VideoMode(1920, 1080), "8-Ball Pool", sf::Style::Fullscreen), view(sf::FloatRect(0, 0, 1200.f, 900.f))
 {
 	isFullscreen = true;
 
@@ -66,11 +66,11 @@ void Game::createWindow()
 
 	if (isFullscreen)
 	{
-		window.create(sf::VideoMode::getDesktopMode(), "Bilard", sf::Style::Fullscreen);
+		window.create(sf::VideoMode::getDesktopMode(), "8-Ball Pool", sf::Style::Fullscreen);
 	}
 	else
 	{
-		window.create(sf::VideoMode(1200, 900), "Bilard", sf::Style::Titlebar | sf::Style::Close);
+		window.create(sf::VideoMode(1200, 900), "8-Ball Pool", sf::Style::Titlebar | sf::Style::Close);
 	}
 
 	view = sf::View(sf::FloatRect(0, 0, 1200.f, 900.f));

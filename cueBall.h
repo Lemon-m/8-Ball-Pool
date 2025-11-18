@@ -8,7 +8,15 @@ class CueBall : public Ball
 public:
 	CueBall(const float& radius, const sf::Vector2f& ballPosition, const sf::Texture& texture);
 
-	sf::RectangleShape aimLine;
+	//sf::RectangleShape aimLine;
+
+	sf::Sprite cueStick;
+
+	sf::Texture cueStickTexture;
+
+	sf::RectangleShape hitForceBar;
+
+	sf::RectangleShape hitForce;
 
 	void aim(sf::RenderWindow& window, sf::Event& event, Turn& turn);
 
@@ -33,12 +41,12 @@ public:
 	void handleHoleCollision(Table& table, const int& i, Turn& turn);
 
 protected:
+
 	bool _aiming;
 	bool _ballInHand;
 	bool _ballInHandRequest;
 	float _rotationInRadians;
 	int _force;
 	int _mouseDistance;
-
 
 };
