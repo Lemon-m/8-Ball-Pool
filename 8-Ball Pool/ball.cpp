@@ -139,11 +139,12 @@ void Ball::calculateVelocity(const float& dt, const bool& rotationOn)
 				sign = 1;
 			}
 			_angularVelocity = sign * (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) / ball.getRadius());
-			if (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) < _stoppingThreshold)
-			{
-				_velocity = sf::Vector2f(0.f, 0.f);
-				_angularVelocity = 0;
-			}
+		}
+
+		if (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) < _stoppingThreshold)
+		{
+			_velocity = sf::Vector2f(0.f, 0.f);
+			_angularVelocity = 0;
 		}
 	}
 }

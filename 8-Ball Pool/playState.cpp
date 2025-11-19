@@ -298,7 +298,7 @@ void PlayState::update(float dt)
 					}
 					else if (collisionForce > 500)
 					{
-						playSound(_game.getVolume(), ballCollisionSounds);
+						playSound(_game.getVolume() * 0.85f, ballCollisionSounds);
 					}
 				}
 

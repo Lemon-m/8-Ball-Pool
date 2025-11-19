@@ -1,3 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="game.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="ball.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="cueBall.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="globals.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="mainMenuState.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="playState.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="table.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="popUp.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="textLabel.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="turn.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorialState.cpp">
+      <Filter>Pliki Źródłowe</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ball.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="cueBall.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="mainMenuState.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="playState.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="popUp.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="state.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="table.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="textLabel.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="turn.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorialState.h">
+      <Filter>Pliki Nagłówkowe</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Pliki Nagłówkowe">
+      <UniqueIdentifier>{e971f653-43f8-403d-a80e-7199f012416a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki Źródłowe">
+      <UniqueIdentifier>{7e23dc89-1f0b-4838-9226-be59a7704293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki Zasobów">
+      <UniqueIdentifier>{31222b37-db02-41a3-a52b-96d765b2e053}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Pliki Zasobów</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>

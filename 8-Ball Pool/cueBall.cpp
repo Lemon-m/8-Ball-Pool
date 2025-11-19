@@ -163,6 +163,7 @@ void CueBall::handleHoleCollision(Table& table, const int& i, Turn& turn)
 	_ballInHandRequest = true;
 	turn.setSwitchRequest(true);
 	_velocity = sf::Vector2f(0.f, 0.f);
+	_angularVelocity = 0;
 	hitForce.setSize(sf::Vector2f(0.f, 5.f));
 	setBallPosition(sf::Vector2f(1220, 920));
 }
