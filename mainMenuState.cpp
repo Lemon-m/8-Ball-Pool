@@ -17,7 +17,7 @@ _popUp(_game.frutiger, "    Are you sure\nyou want to quit?"),
 _volumeLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(50.f, 873.75f), "Volume:"),
 _volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f), std::to_string(_game.getVolume())),
 _rotationSwitchLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(67.5f, 845.f), "Ball rotation:"),
-_creditLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(1050.f, 873.75f), " Game made by Lemon-m on GitHub\nMain Menu BG by u/Rottingbodiess")
+_creditLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(1045.f, 868.75f), " Game made by Lemon-m on GitHub\nMain Menu BG by u/Rottingbodiess")
 {
 	_popUpActive = false;
 
