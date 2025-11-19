@@ -4,6 +4,8 @@ Game::Game() : window(sf::VideoMode(1920, 1080), "8-Ball Pool", sf::Style::Fulls
 {
 	isFullscreen = true;
 
+	volume = 100;
+
 	setViewLetterbox();
 
 	window.setView(view);
@@ -103,6 +105,11 @@ void Game::toggleFullscreen()
 	createWindow();
 }
 
+void Game::setVolume(const int& vol)
+{
+	volume = vol;
+}
+
 void Game::changeState(std::unique_ptr<State> state)
 {
 	if (!states.empty())
@@ -119,6 +126,11 @@ void Game::loadBallTextures()
 		std::string fileString = "assets/ball_" + std::to_string(i + 1) + ".png";
 		ballTextures[i].loadFromFile(fileString);
 	}
+}
+
+int Game::getVolume()
+{
+	return volume;
 }
 
 State* Game::getCurrentState()

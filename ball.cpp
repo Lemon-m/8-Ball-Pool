@@ -87,6 +87,11 @@ void Ball::setBallPosition(const sf::Vector2f& ballPosition)
 	_ballPosition.y = ballPosition.y;
 }
 
+float Ball::getMagnitude()
+{
+	return _magnitude;
+}
+
 void Ball::calculateVelocity(const float& dt)
 {
 	_magnitude = std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y);

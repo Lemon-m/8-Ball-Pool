@@ -32,6 +32,8 @@ public:
 
 	void setBallPosition(const sf::Vector2f& ballPosition);
 
+	float getMagnitude();
+
 	void calculateVelocity(const float& dt);
 
 	bool checkTableCollision(Table& table, const int& i);

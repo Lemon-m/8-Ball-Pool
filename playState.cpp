@@ -118,11 +118,22 @@ table
 	balls.emplace_back(20, sf::Vector2f(315, 470), _game.ballTextures[13]);
 	balls.emplace_back(20, sf::Vector2f(280, 410), _game.ballTextures[14]);
 
-	// for testing vvv
-	//p1.ballType = 1;
-	//p2.ballType = 2;
-	//turn = Turn(p1, scoredSolids, scoredStripes);
-	//turn.set8BallHoleSetMode(true);
+	wallHitBuffer.loadFromFile("assets/audio/Wall.ogg");
+	ballCollisionBuffer.loadFromFile("assets/audio/BallCollision.ogg");
+	lightBallCollisionBuffer.loadFromFile("assets/audio/LightBallCollision.ogg");
+	cueBallHitBuffer.loadFromFile("assets/audio/CueBallHit.ogg");
+	sinkBuffer.loadFromFile("assets/audio/Sink.ogg");
+
+	for (int i = 0; i < wallHitSounds.size(); i++)
+	{
+		wallHitSounds[i].setBuffer(wallHitBuffer);
+		ballCollisionSounds[i].setBuffer(ballCollisionBuffer);
+		lightBallCollisionSounds[i].setBuffer(lightBallCollisionBuffer);
+		cueBallHitSounds[i].setBuffer(cueBallHitBuffer);
+		sinkSounds[i].setBuffer(sinkBuffer);
+	}
+
+	
 }
 
 void PlayState::handleEvent(sf::Event& event)
@@ -175,6 +186,10 @@ void PlayState::handleEvent(sf::Event& event)
 			else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Space) || cueBall.getAiming() == true)
 			{
 				cueBall.aim(_game.window, event, turn);
+				if (turn.getCueBallShot() == true)
+				{
+					playSound(_game.getVolume(), cueBallHitSounds, cueBall.getForce());
+				}
 			}
 		}
 	}
@@ -247,6 +262,42 @@ void PlayState::update(float dt)
 			if (balls[i].checkBallCollision(balls[j]))
 			{
 				balls[i].handleBallCollision(balls[j]);
+
+				float collisionForce;
+
+				if (balls[i].getMagnitude() >= balls[j].getMagnitude())
+				{
+					collisionForce = balls[i].getMagnitude();
+				}
+				else if (balls[j].getMagnitude() > balls[i].getMagnitude())
+				{
+					collisionForce = balls[j].getMagnitude();
+				}
+				else
+				{
+					collisionForce = balls[i].getMagnitude();
+				}
+
+				if (collisionForce != 0)
+				{
+					if (collisionForce <= 75)
+					{
+						playSound(_game.getVolume() * 0.25f, lightBallCollisionSounds);
+					}
+					else if (collisionForce > 75 && collisionForce <= 150)
+					{
+						playSound(_game.getVolume(), lightBallCollisionSounds);
+					}
+					else if (collisionForce > 150 && collisionForce <= 500)
+					{
+						playSound(_game.getVolume() * 0.6f, ballCollisionSounds);
+					}
+					else if (collisionForce > 500)
+					{
+						playSound(_game.getVolume(), ballCollisionSounds);
+					}
+				}
+
 			}
 		}
 
@@ -255,6 +306,7 @@ void PlayState::update(float dt)
 			if (balls[i].checkHoleCollision(table, j))
 			{
 				//std::cout << "kolizja z ³uz¹\n";
+				playSound(_game.getVolume(), sinkSounds);
 				balls[i].handleHoleCollision(table, j, turn, p1, p2, scoredSolids, scoredStripes, scoredSolidsUI, scoredStripesUI, p1FirstUIBallPos, p2FirstUIBallPos, win);
 			}
 		}
@@ -264,6 +316,7 @@ void PlayState::update(float dt)
 			if (balls[i].checkTableCollision(table, j))
 			{
 				balls[i].handleTableCollision(table, j);
+				playSound(_game.getVolume(), wallHitSounds, balls[i].getMagnitude());
 				if (turn.getCueBallCollisions() > 0)
 				{
 					turn.wallHit();
@@ -283,6 +336,42 @@ void PlayState::update(float dt)
 			{
 				//std::cout << "kolizja z bil¹\n";
 				cueBall.handleBallCollision(balls[i]);
+
+				float collisionForce;
+
+				if (cueBall.getMagnitude() >= balls[i].getMagnitude())
+				{
+					collisionForce = cueBall.getMagnitude();
+				}
+				else if (balls[i].getMagnitude() > cueBall.getMagnitude())
+				{
+					collisionForce = balls[i].getMagnitude();
+				}
+				else
+				{
+					collisionForce = cueBall.getMagnitude();
+				}
+
+				if (collisionForce != 0)
+				{
+					if (collisionForce <= 75)
+					{
+						playSound(_game.getVolume() * 0.25f, lightBallCollisionSounds);
+					}
+					else if (collisionForce > 75 && collisionForce <= 150)
+					{
+						playSound(_game.getVolume(), lightBallCollisionSounds);
+					}
+					else if (collisionForce > 150 && collisionForce <= 500)
+					{
+						playSound(_game.getVolume() * 0.6f, ballCollisionSounds);
+					}
+					else if (collisionForce > 500)
+					{
+						playSound(_game.getVolume(), ballCollisionSounds);
+					}
+				}
+
 				if (turn.getCueBallCollisions() == 0)
 				{
 					turn.firstBallIDSetAndCheck(balls[i], cueBall, win);
@@ -296,6 +385,8 @@ void PlayState::update(float dt)
 			if (cueBall.checkHoleCollision(table, i))
 			{
 				//std::cout << "kolizja z ³uz¹\n";
+				playSound(_game.getVolume(), sinkSounds);
+
 				if (turn.get8BallScored() == false)
 				{
 					cueBall.handleHoleCollision(table, i, turn);
@@ -322,6 +413,7 @@ void PlayState::update(float dt)
 			{
 				//std::cout << "kolizja\n";
 				cueBall.handleTableCollision(table, i);
+				playSound(_game.getVolume(), wallHitSounds, cueBall.getMagnitude());
 				if (turn.getCueBallCollisions() > 0)
 				{
 					turn.wallHit();
@@ -612,4 +704,49 @@ void PlayState::render(sf::RenderWindow& window)
 		winPopUp.draw(window);
 		winPopUpReset.draw(window);
 	}
+}
+
+void PlayState::playSound(float volume, std::array<sf::Sound, 20>& pool, int force)
+{
+	for (int i = 0; i < pool.size(); i++)
+	{
+		if (pool[i].getStatus() != sf::Sound::Playing)
+		{
+			if (force <= 150 && force != 0)
+			{
+				pool[i].setVolume(volume * 0.2f);
+			}
+			else if (force > 150 && force <= 500)
+			{
+				pool[i].setVolume(volume * 0.6f);
+			}
+			else if (force > 500)
+			{
+				pool[i].setVolume(volume);
+			}
+
+			pool[i].play();
+			return;
+				
+		}
+	}
+
+	pool[0].setVolume(volume);
+	pool[0].play();
+}
+
+void PlayState::playSound(float volume, std::array<sf::Sound, 20>& pool)
+{
+	for (int i = 0; i < pool.size(); i++)
+	{
+		if (pool[i].getStatus() != sf::Sound::Playing)
+		{
+			pool[i].setVolume(volume);
+			pool[i].play();
+			return;
+		}
+	}
+
+	pool[0].setVolume(volume);
+	pool[0].play();
 }

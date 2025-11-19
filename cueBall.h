@@ -30,6 +30,8 @@ public:
 
 	bool getBallInHand();
 
+	int getForce();
+
 	void setBallInHand(bool ballInHand);
 
 	bool getBallInHandRequest();

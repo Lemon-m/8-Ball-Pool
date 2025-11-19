@@ -23,9 +23,13 @@ class Game
 
 		void toggleFullscreen();
 
+		void setVolume(const int& vol);
+
 		void changeState(std::unique_ptr<State> state);
 
 		void loadBallTextures();
+
+		int getVolume();
 
 		State* getCurrentState();
 
@@ -42,6 +46,6 @@ class Game
 	private:
 
 		std::stack<std::unique_ptr<State>> states;
-
+		int volume;
 		bool isFullscreen;
 };

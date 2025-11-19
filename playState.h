@@ -1,6 +1,7 @@
 #pragma once
 #include "state.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/System.hpp>
 #include "game.h"
 #include "ball.h"
@@ -22,6 +23,10 @@ class PlayState : public State
 
 		void render(sf::RenderWindow& window) override;
 
+		void playSound(float volume, std::array<sf::Sound, 20>& pool, int force);
+
+		void playSound(float volume, std::array<sf::Sound, 20>& pool);
+
 	protected:
 
 		Player p1, p2;
@@ -33,6 +38,8 @@ class PlayState : public State
 		Table table;
 		sf::Texture bgTexture, backTexture;
 		sf::Sprite bg, backBtn;
+		sf::SoundBuffer wallHitBuffer, ballCollisionBuffer, lightBallCollisionBuffer, cueBallHitBuffer, sinkBuffer;
+		std::array<sf::Sound, 20> wallHitSounds, ballCollisionSounds, lightBallCollisionSounds, cueBallHitSounds, sinkSounds;
 		PopUp backPopUp, winPopUp;
 		TextLabel backPopUpYes, backPopUpNo, winPopUpReset, resetBtn, turnText, preShotText, player1Text, player1Type, player2Text, player2Type, p1Marker, p2Marker;
 		sf::CircleShape p1MarkerArrow, p2MarkerArrow;

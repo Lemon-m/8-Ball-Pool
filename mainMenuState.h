@@ -22,9 +22,14 @@ class MainMenuState : public State
 	protected:
 
 		sf::Text _title;
+		sf::RectangleShape _volumeBarGrey;
+		sf::RectangleShape _volumeBarGreen;
+		sf::RectangleShape _volumeBarHitbox;
 		TextLabel _playButton;
 		TextLabel _tutorialButton;
 		TextLabel _quitButton;
+		TextLabel _volumeLabel;
+		TextLabel _volumeValue;
 		PopUp _popUp;
 		TextLabel _popUpYes;
 		TextLabel _popUpNo;

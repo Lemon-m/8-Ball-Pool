@@ -12,7 +12,9 @@ _tutorialButton(_game.frutiger, 48, sf::Color::Black, sf::Color(102, 102, 102), 
 _quitButton(_game.frutiger, 48, sf::Color::Black, sf::Color(102, 102, 102), sf::Vector2f(600.f, 525.f), "Quit"),
 _popUpYes(_game.frutiger, 56, sf::Color(31, 224, 69), sf::Color(85, 219, 117), sf::Vector2f(470.f, 555.f), "Yes"),
 _popUpNo(_game.frutiger, 56, sf::Color(255, 42, 74), sf::Color(255, 71, 101), sf::Vector2f(730.f, 555.f), "No"),
-_popUp(_game.frutiger, "    Are you sure\nyou want to quit?")
+_popUp(_game.frutiger, "    Are you sure\nyou want to quit?"),
+_volumeLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(50.f, 873.75f), "Volume:"),
+_volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f), std::to_string(_game.getVolume()))
 {
 	_popUpActive = false;
 
@@ -30,10 +32,26 @@ _popUp(_game.frutiger, "    Are you sure\nyou want to quit?")
 	sf::Vector2f titleCenter(_title.getLocalBounds().width / 2.f, _title.getLocalBounds().height / 2.f);
 	_title.setOrigin(titleCenter);
 	_title.setPosition(sf::Vector2f(600.f, 200.f));
+
+	_volumeBarHitbox.setSize(sf::Vector2f(190.f, 50.f));
+	_volumeBarHitbox.setPosition(70.f, 850.f);
+
+	_volumeBarGrey.setSize(sf::Vector2f(148.f, 10.f));
+	_volumeBarGrey.setOrigin(0.f, 5.f);
+	_volumeBarGrey.setPosition(90.f, 880.f);
+	_volumeBarGrey.setFillColor(sf::Color(85, 85, 85));
+
+	_volumeBarGreen.setSize(sf::Vector2f(game.getVolume() * 1.5f, 10.f));
+	_volumeBarGreen.setOrigin(0.f, 5.f);
+	_volumeBarGreen.setPosition(90.f, 880.f);
+	_volumeBarGreen.setFillColor(sf::Color::Green);
 }
 
 void MainMenuState::handleEvent(sf::Event& event)
 {
+	float mouseX = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).x;
+	float mouseY = _game.window.mapPixelToCoords(sf::Mouse::getPosition(_game.window)).y;
+
 	if (_popUpActive == false)
 	{
 		if (_playButton.isMouseOver(_game.window))
@@ -61,6 +79,14 @@ void MainMenuState::handleEvent(sf::Event& event)
 				_quitButton.text.setFillColor(_quitButton.normalColor);
 				_popUpActive = true;
 			}
+		}
+
+		if (_volumeBarHitbox.getGlobalBounds().contains(mouseX, mouseY) && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+		{
+			int newVol = std::clamp(mouseX - 90.f, 0.f, 150.f);
+			_volumeBarGreen.setSize(sf::Vector2f(newVol, 10.f));
+			_game.setVolume(newVol / 1.5);
+			_volumeValue.changeText(std::to_string(_game.getVolume()));
 		}
 	}
 	else
@@ -96,6 +122,10 @@ void MainMenuState::render(sf::RenderWindow& window)
 	_playButton.draw(window);
 	_tutorialButton.draw(window);
 	_quitButton.draw(window);
+	_volumeLabel.draw(window);
+	_volumeValue.draw(window);
+	window.draw(_volumeBarGrey);
+	window.draw(_volumeBarGreen);
 	if (_popUpActive == true)
 	{
 		_popUp.draw(window);

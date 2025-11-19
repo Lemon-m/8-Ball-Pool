@@ -118,6 +118,11 @@ bool CueBall::getBallInHand()
 	return _ballInHand;
 }
 
+int CueBall::getForce()
+{
+	return _force;
+}
+
 void CueBall::setBallInHand(bool ballInHand)
 {
 	_ballInHand = ballInHand;
