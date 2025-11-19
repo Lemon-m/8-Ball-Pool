@@ -25,11 +25,15 @@ class Game
 
 		void setVolume(const int& vol);
 
+		void setBallRotationSwitch(bool ballRotation);
+
 		void changeState(std::unique_ptr<State> state);
 
 		void loadBallTextures();
 
 		int getVolume();
+
+		bool isBallRotationOn();
 
 		State* getCurrentState();
 
@@ -48,4 +52,5 @@ class Game
 		std::stack<std::unique_ptr<State>> states;
 		int volume;
 		bool isFullscreen;
+		bool ballRotationOn;
 };

@@ -5,6 +5,7 @@
 #include "ball.h"
 #include <memory>
 #include <stack>
+#include <iostream>
 
 MainMenuState::MainMenuState(Game& game) : State(game),
 _playButton(_game.frutiger, 48, sf::Color::Black, sf::Color(102, 102, 102), sf::Vector2f(600.f, 375.f), "Play"),
@@ -14,7 +15,9 @@ _popUpYes(_game.frutiger, 56, sf::Color(31, 224, 69), sf::Color(85, 219, 117), s
 _popUpNo(_game.frutiger, 56, sf::Color(255, 42, 74), sf::Color(255, 71, 101), sf::Vector2f(730.f, 555.f), "No"),
 _popUp(_game.frutiger, "    Are you sure\nyou want to quit?"),
 _volumeLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(50.f, 873.75f), "Volume:"),
-_volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f), std::to_string(_game.getVolume()))
+_volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f), std::to_string(_game.getVolume())),
+_rotationSwitchLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(67.5f, 845.f), "Ball rotation:"),
+_creditLabel(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(1050.f, 873.75f), " Game made by Lemon-m on GitHub\nMain Menu BG by u/Rottingbodiess")
 {
 	_popUpActive = false;
 
@@ -34,7 +37,7 @@ _volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f),
 	_title.setPosition(sf::Vector2f(600.f, 200.f));
 
 	_volumeBarHitbox.setSize(sf::Vector2f(190.f, 50.f));
-	_volumeBarHitbox.setPosition(70.f, 850.f);
+	_volumeBarHitbox.setPosition(70.f, 865.f);
 
 	_volumeBarGrey.setSize(sf::Vector2f(148.f, 10.f));
 	_volumeBarGrey.setOrigin(0.f, 5.f);
@@ -45,6 +48,13 @@ _volumeValue(_game.frutiger, 18, sf::Color::Black, sf::Vector2f(260.f, 873.75f),
 	_volumeBarGreen.setOrigin(0.f, 5.f);
 	_volumeBarGreen.setPosition(90.f, 880.f);
 	_volumeBarGreen.setFillColor(sf::Color::Green);
+
+	_switchOnTexture.loadFromFile("assets/SwitchOn.png");
+	_switchOffTexture.loadFromFile("assets/SwitchOff.png");
+
+	_switch.setTexture(_switchOnTexture);
+	_switch.setOrigin(_switch.getLocalBounds().width / 2, _switch.getLocalBounds().height / 2);
+	_switch.setPosition(165.f, 850.f);
 }
 
 void MainMenuState::handleEvent(sf::Event& event)
@@ -88,6 +98,19 @@ void MainMenuState::handleEvent(sf::Event& event)
 			_game.setVolume(newVol / 1.5);
 			_volumeValue.changeText(std::to_string(_game.getVolume()));
 		}
+
+		if (_switch.getGlobalBounds().contains(mouseX, mouseY) && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+		{
+			_game.setBallRotationSwitch(!_game.isBallRotationOn());
+			if (_game.isBallRotationOn() == true)
+			{
+				_switch.setTexture(_switchOnTexture);
+			}
+			else
+			{
+				_switch.setTexture(_switchOffTexture);
+			}
+		}
 	}
 	else
 	{
@@ -124,8 +147,11 @@ void MainMenuState::render(sf::RenderWindow& window)
 	_quitButton.draw(window);
 	_volumeLabel.draw(window);
 	_volumeValue.draw(window);
+	_rotationSwitchLabel.draw(window);
+	_creditLabel.draw(window);
 	window.draw(_volumeBarGrey);
 	window.draw(_volumeBarGreen);
+	window.draw(_switch);
 	if (_popUpActive == true)
 	{
 		_popUp.draw(window);

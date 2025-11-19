@@ -16,7 +16,7 @@ public:
 
 	static void resetBallCount();
 
-	virtual void drawBall(sf::RenderWindow& window);
+	virtual void drawBall(sf::RenderWindow& window, const bool& rotationOn);
 
 	sf::Vector2f getVelocity();
 
@@ -30,11 +30,17 @@ public:
 
 	void setVelocity(sf::Vector2f velocity);
 
+	void setBallRotation(const float& rotation);
+
 	void setBallPosition(const sf::Vector2f& ballPosition);
 
 	float getMagnitude();
 
-	void calculateVelocity(const float& dt);
+	float getAngularVelocity();
+
+	float getRotation();
+
+	void calculateVelocity(const float& dt, const bool& rotationOn);
 
 	bool checkTableCollision(Table& table, const int& i);
 
@@ -59,7 +65,8 @@ protected:
 	sf::Vector2f _frictionVector;
 	sf::Vector2f _closestWallCoordinate;
 	unsigned int _ID;
-	float _rotation;
+	float _rotation; // rad
+	float _angularVelocity; // rad
 	float _friction;
 	float _magnitude;
 	float _stoppingThreshold;

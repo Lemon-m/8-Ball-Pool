@@ -24,6 +24,7 @@ Ball::Ball(const float& radius, const sf::Vector2f& ballPosition, const sf::Text
 	_stoppingThreshold = 7.5f;
 	_velocity.x = 0;
 	_velocity.y = 0;
+	_angularVelocity = 0;
 	_ballPosition.x = ballPosition.x;
 	_ballPosition.y = ballPosition.y;
 	_bTexture = &texture;
@@ -44,9 +45,14 @@ void Ball::resetBallCount()
 	_ballCount = 0;
 }
 
-void Ball::drawBall(sf::RenderWindow& window)
+void Ball::drawBall(sf::RenderWindow& window, const bool& rotationOn)
 {
 	ball.setPosition(_ballPosition);
+	if (rotationOn == true)
+	{
+		ball.setRotation(_rotation * (180 / pi));
+	}
+
 	window.draw(ball);
 }
 
@@ -59,6 +65,11 @@ void Ball::setVelocity(sf::Vector2f velocity)
 {
 	_velocity.x = velocity.x;
 	_velocity.y = velocity.y;
+}
+
+void Ball::setBallRotation(const float& rotation)
+{
+	_rotation = rotation;
 }
 
 sf::Vector2f Ball::getBallPosition()
@@ -92,7 +103,17 @@ float Ball::getMagnitude()
 	return _magnitude;
 }
 
-void Ball::calculateVelocity(const float& dt)
+float Ball::getAngularVelocity()
+{
+	return _angularVelocity;
+}
+
+float Ball::getRotation()
+{
+	return _rotation;
+}
+
+void Ball::calculateVelocity(const float& dt, const bool& rotationOn)
 {
 	_magnitude = std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y);
 	if (_magnitude > 0)
@@ -101,9 +122,28 @@ void Ball::calculateVelocity(const float& dt)
 		_frictionVector.x = _velocity.x / _magnitude * _friction;
 		_frictionVector.y = _velocity.y / _magnitude * _friction;
 		_velocity -= _frictionVector;
-		if (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) < _stoppingThreshold)
+
+		if (rotationOn == true)
 		{
-			_velocity = sf::Vector2f(0.f, 0.f);
+			int sign = 1;
+			if (_velocity.x >= 0)
+			{
+				sign = 1;
+			}
+			else if (_velocity.x < 0)
+			{
+				sign = -1;
+			}
+			else
+			{
+				sign = 1;
+			}
+			_angularVelocity = sign * (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) / ball.getRadius());
+			if (std::sqrt(_velocity.x * _velocity.x + _velocity.y * _velocity.y) < _stoppingThreshold)
+			{
+				_velocity = sf::Vector2f(0.f, 0.f);
+				_angularVelocity = 0;
+			}
 		}
 	}
 }

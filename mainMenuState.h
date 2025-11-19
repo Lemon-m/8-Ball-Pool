@@ -30,10 +30,15 @@ class MainMenuState : public State
 		TextLabel _quitButton;
 		TextLabel _volumeLabel;
 		TextLabel _volumeValue;
+		TextLabel _rotationSwitchLabel;
+		TextLabel _creditLabel;
 		PopUp _popUp;
 		TextLabel _popUpYes;
 		TextLabel _popUpNo;
 		bool _popUpActive;
 		sf::Texture _bgTexture;
+		sf::Texture _switchOffTexture;
+		sf::Texture _switchOnTexture;
+		sf::Sprite _switch;
 		sf::Sprite _bg;
 };

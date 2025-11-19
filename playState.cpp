@@ -255,7 +255,11 @@ void PlayState::update(float dt)
 	for (int i = 0; i < balls.size(); i++)
 	{
 		balls[i].setBallPosition(balls[i].getBallPosition() + balls[i].getVelocity() * dt);
-		balls[i].calculateVelocity(dt);
+		if (_game.isBallRotationOn())
+		{
+			balls[i].setBallRotation(balls[i].getRotation() + balls[i].getAngularVelocity() * dt);
+		}
+		balls[i].calculateVelocity(dt, _game.isBallRotationOn());
 
 		for (int j = i + 1; j < balls.size(); j++)
 		{
@@ -328,7 +332,11 @@ void PlayState::update(float dt)
 	if (cueBall.getBallInHand() == false && turn.get8ballHoleSetMode() == false)
 	{
 		cueBall.setBallPosition(cueBall.getBallPosition() + cueBall.getVelocity() * dt);
-		cueBall.calculateVelocity(dt);
+		if (_game.isBallRotationOn())
+		{
+			cueBall.setBallRotation(cueBall.getRotation() + cueBall.getAngularVelocity() * dt);
+		}
+		cueBall.calculateVelocity(dt, _game.isBallRotationOn());
 
 		for (int i = 0; i < balls.size(); i++)
 		{
@@ -656,7 +664,7 @@ void PlayState::render(sf::RenderWindow& window)
 		}
 		else
 		{
-			balls[i].drawBall(window);
+			balls[i].drawBall(window, _game.isBallRotationOn());
 			i++;
 		}
 	}
@@ -691,7 +699,7 @@ void PlayState::render(sf::RenderWindow& window)
 	{
 		resetBtn.draw(window);
 	}
-	cueBall.drawBall(window);
+	cueBall.drawBall(window, _game.isBallRotationOn());
 	window.draw(backBtn);
 	if (backPopUpActive == true)
 	{

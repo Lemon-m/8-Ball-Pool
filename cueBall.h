@@ -38,7 +38,7 @@ public:
 
 	void setBallInHandRequest(bool ballInHand);
 
-	void drawBall(sf::RenderWindow& window) override;
+	void drawBall(sf::RenderWindow& window, const bool& rotationOn) override;
 
 	void handleHoleCollision(Table& table, const int& i, Turn& turn);
 
@@ -47,7 +47,8 @@ protected:
 	bool _aiming;
 	bool _ballInHand;
 	bool _ballInHandRequest;
-	float _rotationInRadians;
+	float _shotAngle;
+	float _angleInRadians;
 	int _force;
 	int _mouseDistance;
 

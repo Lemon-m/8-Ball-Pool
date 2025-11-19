@@ -27,7 +27,8 @@ CueBall::CueBall(const float& radius, const sf::Vector2f& ballPosition, const sf
 	_ballInHand = false;
 	_ballInHandRequest = false;
 	_aiming = false;
-	_rotationInRadians = 0;
+	_shotAngle = 0;
+	_angleInRadians = 0;
 	_force = 0;
 	_mouseDistance = 0;
 }
@@ -36,7 +37,7 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 {
 	_aiming = true;
 
-	_rotation = (std::atan2(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - _ballPosition.x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - _ballPosition.y) * 180) / pi;
+	_shotAngle = (std::atan2(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x - _ballPosition.x, window.mapPixelToCoords(sf::Mouse::getPosition(window)).y - _ballPosition.y) * 180) / pi;
 	_mouseDistance = sqrt(pow((_ballPosition.x) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).x, 2) + pow((_ballPosition.y) - window.mapPixelToCoords(sf::Mouse::getPosition(window)).y, 2));
 
 	//aimLine.setPosition(_ballPosition);
@@ -44,17 +45,17 @@ void CueBall::aim(sf::RenderWindow& window, sf::Event& event, Turn& turn)
 	//aimLine.setRotation(-_rotation);
 
 	cueStick.setPosition(_ballPosition);
-	cueStick.setRotation(-_rotation + 90);
+	cueStick.setRotation(-_shotAngle + 90);
 
 	hitForceBar.setPosition(_ballPosition);
-	hitForceBar.setRotation(-_rotation + 90);
+	hitForceBar.setRotation(-_shotAngle + 90);
 
 	hitForce.setPosition(_ballPosition);
 
 	float hitForceLength = (std::clamp(_mouseDistance, 55, 190) * 1.465) - 80;
 
 	hitForce.setSize(sf::Vector2f(hitForceLength, 5.f));
-	hitForce.setRotation(-_rotation + 90);
+	hitForce.setRotation(-_shotAngle + 90);
 
 	_force = _mouseDistance - 40; // force = 75 (max mouseDistance = 55) | force = 150 (min mouseDistance = 190)
 	_force = std::clamp(_force, 15, 150);
@@ -94,9 +95,9 @@ void CueBall::ballInHandMode(sf::RenderWindow& window, sf::Mouse mouse, Table& t
 void CueBall::Shoot()
 {
 	_aiming = false;
-	_rotationInRadians = (_rotation * (pi / 180)) - 1.57079633; // 1.57079633 rad = 90 degrees
-	_velocity.x = -(_force * cos(_rotationInRadians));
-	_velocity.y = _force * sin(_rotationInRadians);
+	_angleInRadians = (_shotAngle * (pi / 180)) - 1.57079633; // 1.57079633 rad = 90 degrees
+	_velocity.x = -(_force * cos(_angleInRadians));
+	_velocity.y = _force * sin(_angleInRadians);
 	hitForce.setSize(sf::Vector2f(0.f, 5.f));
 
 	//std::cout << "Hit\n";
@@ -138,9 +139,14 @@ void CueBall::setBallInHandRequest(bool ballInHandRequest)
 	_ballInHandRequest = ballInHandRequest;
 }
 
-void CueBall::drawBall(sf::RenderWindow& window)
+void CueBall::drawBall(sf::RenderWindow& window, const bool& rotationOn)
 {
 	ball.setPosition(_ballPosition);
+	if (rotationOn == true)
+	{
+		ball.setRotation(_rotation * (180 / pi));
+	}
+
 	if (_aiming == true)
 	{
 		window.draw(cueStick);

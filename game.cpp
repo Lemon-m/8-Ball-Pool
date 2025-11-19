@@ -3,6 +3,7 @@
 Game::Game() : window(sf::VideoMode(1920, 1080), "8-Ball Pool", sf::Style::Fullscreen), view(sf::FloatRect(0, 0, 1200.f, 900.f))
 {
 	isFullscreen = true;
+	ballRotationOn = true;
 
 	volume = 100;
 
@@ -110,6 +111,11 @@ void Game::setVolume(const int& vol)
 	volume = vol;
 }
 
+void Game::setBallRotationSwitch(bool ballRotation)
+{
+	ballRotationOn = ballRotation;
+}
+
 void Game::changeState(std::unique_ptr<State> state)
 {
 	if (!states.empty())
@@ -131,6 +137,11 @@ void Game::loadBallTextures()
 int Game::getVolume()
 {
 	return volume;
+}
+
+bool Game::isBallRotationOn()
+{
+	return ballRotationOn;
 }
 
 State* Game::getCurrentState()
