@@ -23,7 +23,6 @@
 ## ⚠️ Known Issues
 
 - Collision sounds stacking during the bool preak in the beginning, resulting in a really loud collision sound.
-- Multiple collision sounds sometimes playing during one collision, resulting in a really loud collision sound.
 
 ## ✅ Requirements
 - C++17
